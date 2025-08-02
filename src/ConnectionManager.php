@@ -10,21 +10,47 @@ use Dotenv\Dotenv;
 
 class ConnectionManager
 {
+    /**
+     * Sufixo do driver da conexão PDO
+     * @var array
+     */
     private static array $connections = [];
+
+    /**
+     * Instância do logger
+     * @var Logger
+     */
     private static Logger $logger;
 
+    /**
+     * Inicia o logger
+     * 
+     * @return void
+     */
     public static function initLogger(): void
     {
         self::$logger = new Logger('database');
         self::$logger->pushHandler(new StreamHandler(__DIR__ . '/../../logs/app.log', Logger::ERROR));
     }
 
+    /**
+     * Carrega as variáveis de ambiente
+     * 
+     * @param string $path
+     * @return void
+     */
     public static function loadEnv(string $path): void
     {
         $dotenv = Dotenv::createImmutable($path);
         $dotenv->load();
     }
 
+    /**
+     * Conecta ao banco de dados
+     * 
+     * @param string $alias
+     * @throws \InvalidArgumentException
+     */
     public static function connect(string $alias): ?PDO
     {
         if (isset(self::$connections[$alias])) {
@@ -55,9 +81,11 @@ class ConnectionManager
 
             self::$connections[$alias] = $pdo;
             return $pdo;
+
         } catch (\Throwable $e) {
             self::$logger->error("Erro de conexão [$alias]: " . $e->getMessage());
             return null;
         }
     }
+
 }

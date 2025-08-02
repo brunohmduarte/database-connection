@@ -18,18 +18,12 @@ try {
     }
 
     $user = new User($pdo);
-    
+
     // Atualização
     $result = $user->update(1, ['name' => 'Will Smith']);
     if ($result) {
         echo 'Atualizado com sucesso!' . PHP_EOL;
     }
-
-    // Remoção
-    // $result = $user->delete(3);
-    // if ($result) {
-    //     echo 'Removido com sucesso!' . PHP_EOL;
-    // }
 
 } catch (\PDOException $e) {
     echo "MySQL: " . $e->getMessage() . PHP_EOL;
